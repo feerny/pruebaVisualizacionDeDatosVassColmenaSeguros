@@ -1,0 +1,38 @@
+{
+    "ventasPorRegion": {
+      "Antioquia": 5000,
+      "Bogotá D.C.": 8000,
+      "Valle del Cauca": 3000,
+      "Atlántico": 4000,
+      "Santander": 3500
+    },
+    "usuariosRegistradosPorMes": {
+      "enero": 100,
+      "febrero": 150,
+      "marzo": 200,
+      "abril": 180,
+      "mayo": 250,
+      "junio": 300,
+      "julio": 350,
+      "agosto": 400,
+      "septiembre": 380,
+      "octubre": 420,
+      "noviembre": 450,
+      "diciembre": 500
+    },
+    "ventasPorMes": {
+      "enero": 15000,
+      "febrero": 18000,
+      "marzo": 22000,
+      "abril": 19000,
+      "mayo": 25000,
+      "junio": 22000,
+      "julio": 28000,
+      "agosto": 26000,
+      "septiembre": 24000,
+      "octubre": 28000,
+      "noviembre": 30000,
+      "diciembre": 32000
+    }
+  }
+  
