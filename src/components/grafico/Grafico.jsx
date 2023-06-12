@@ -2,21 +2,42 @@ import React, { useEffect, useRef, useState } from 'react';
 import Chart from 'chart.js/auto';
 import data from '../../data/datos.json';
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
+import { styled } from '@mui/system';
+
+const Container = styled('div')({
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  marginTop: '20px',
+});
+
+const SelectContainer = styled('div')({
+  display: 'flex',
+  justifyContent: 'center',
+  marginBottom: '16px',
+  gap: '16px',
+});
 
 function Grafico() {
   const [option1, setOption1] = useState('bar');
   const [option2, setOption2] = useState('ventasPorRegion');
-  const dataList = JSON.parse(localStorage.getItem("data")) || data;
+  const dataList = JSON.parse(localStorage.getItem('data')) || data;
   const chartRef = useRef(null);
 
   useEffect(() => {
     var labels;
     var data;
-    if (option2==="ventasPorRegion") {
-       labels=["Antioquia","BogotáDC","ValledelCauca","Atlántico","Santander"]
-       data=[dataList.ventasPorRegion.Antioquia,dataList.ventasPorRegion.BogotáDC,dataList.ventasPorRegion.ValledelCauca,dataList.ventasPorRegion.Atlántico,dataList.ventasPorRegion.Santander]
-    }else if (option2==="usuariosRegistradosPorMes") {
-      labels=[
+    if (option2 === 'ventasPorRegion') {
+      labels = ['Antioquia', 'BogotáDC', 'ValledelCauca', 'Atlántico', 'Santander'];
+      data = [
+        dataList.ventasPorRegion.Antioquia,
+        dataList.ventasPorRegion.BogotáDC,
+        dataList.ventasPorRegion.ValledelCauca,
+        dataList.ventasPorRegion.Atlántico,
+        dataList.ventasPorRegion.Santander,
+      ];
+    } else if (option2 === 'usuariosRegistradosPorMes') {
+      labels = [
         'enero',
         'febrero',
         'marzo',
@@ -29,8 +50,8 @@ function Grafico() {
         'octubre',
         'noviembre',
         'diciembre',
-      ]
-      data=[
+      ];
+      data = [
         dataList.usuariosRegistradosPorMes.enero,
         dataList.usuariosRegistradosPorMes.febrero,
         dataList.usuariosRegistradosPorMes.marzo,
@@ -44,8 +65,8 @@ function Grafico() {
         dataList.usuariosRegistradosPorMes.noviembre,
         dataList.usuariosRegistradosPorMes.diciembre,
       ];
-    }else if (option2==="ventasPorMes") {
-      labels=[
+    } else if (option2 === 'ventasPorMes') {
+      labels = [
         'enero',
         'febrero',
         'marzo',
@@ -58,8 +79,8 @@ function Grafico() {
         'octubre',
         'noviembre',
         'diciembre',
-      ]
-      data=[
+      ];
+      data = [
         dataList.ventasPorMes.enero,
         dataList.ventasPorMes.febrero,
         dataList.ventasPorMes.marzo,
@@ -112,40 +133,40 @@ function Grafico() {
     setOption2(event.target.value);
   };
 
-  
-
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
-      <FormControl sx={{ maxWidth:200,minWidth: 100, marginRight: '16px' }}>
-      <InputLabel id="option1-label">Tipo Grafico</InputLabel>
-        <Select
-          labelId="option1-label"
-          label="Tipo Grafico"
-          value={option1}
-          onChange={handleOption1Change}
-        >
-          <MenuItem value="bar">bar</MenuItem>
-          <MenuItem value="line">line</MenuItem>
-          <MenuItem value="radar">radar</MenuItem>
-          <MenuItem value="pie">pie</MenuItem>
-          <MenuItem value="doughnut">doughnut</MenuItem>
-        </Select>
-      </FormControl>
-      <canvas ref={chartRef} style={{ maxWidth: '500px', maxHeight: '500px', minHeight:"200px", minWidth:"200px" }} />
-      <FormControl sx={{ maxWidth:200,minWidth: 100, marginLeft: '16px' }}>
-        <InputLabel id="option2-label">Datos</InputLabel>
-        <Select
-          labelId="option2-label"
-          label="Datos"
-          value={option2}
-          onChange={handleOption2Change}
-        >
-          <MenuItem value="ventasPorRegion">ventas Por Region</MenuItem>
-          <MenuItem value="usuariosRegistradosPorMes">usuarios Registrados Por Mes</MenuItem>
-          <MenuItem value="ventasPorMes">ventas Por Mes</MenuItem>
-        </Select>
-      </FormControl>
-    </div>
+    <Container>
+      <SelectContainer>
+        <FormControl sx={{ maxWidth: 200, minWidth: 100 }}>
+          <InputLabel id="option1-label">Tipo Grafico</InputLabel>
+          <Select
+            labelId="option1-label"
+            label="Tipo Grafico"
+            value={option1}
+            onChange={handleOption1Change}
+          >
+            <MenuItem value="bar">bar</MenuItem>
+            <MenuItem value="line">line</MenuItem>
+            <MenuItem value="radar">radar</MenuItem>
+            <MenuItem value="pie">pie</MenuItem>
+            <MenuItem value="doughnut">doughnut</MenuItem>
+          </Select>
+        </FormControl>
+        <FormControl sx={{ maxWidth: 200, minWidth: 100 }}>
+          <InputLabel id="option2-label">Datos</InputLabel>
+          <Select
+            labelId="option2-label"
+            label="Datos"
+            value={option2}
+            onChange={handleOption2Change}
+          >
+            <MenuItem value="ventasPorRegion">ventas Por Region</MenuItem>
+            <MenuItem value="usuariosRegistradosPorMes">usuarios Registrados Por Mes</MenuItem>
+            <MenuItem value="ventasPorMes">ventas Por Mes</MenuItem>
+          </Select>
+        </FormControl>
+      </SelectContainer>
+      <canvas ref={chartRef} style={{ maxWidth: '500px', maxHeight: '400px', minHeight: '200px', minWidth: '200px' }} />
+    </Container>
   );
 }
 
