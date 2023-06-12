@@ -7,8 +7,8 @@ import DataList from '../components/grafico/DataList';
 export default function Home(props) {
   return (
     <div>
-      <NavBar />
       <Router>
+      <NavBar />
         <Routes>
           <Route exact path="/" element={<Grafico />} />
           <Route exact path="/data" element={<DataList />} />

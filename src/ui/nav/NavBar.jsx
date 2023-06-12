@@ -10,10 +10,10 @@ function NavBar() {
           G-DATA
         </Typography>
         <div>
-          <Button color="inherit"  to="/">
+          <Button component={Link} to="/" color="inherit">
             Grafica
           </Button>
-          <Button color="inherit"  to="/datos">
+          <Button component={Link} to="/data" color="inherit">
             Datos
           </Button>
         </div>
