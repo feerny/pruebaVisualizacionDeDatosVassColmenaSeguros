@@ -4,29 +4,87 @@ import data from '../../data/datos.json';
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 
 function Grafico() {
-  const [option1, setOption1] = useState('');
-  const [option2, setOption2] = useState('');
+  const [option1, setOption1] = useState('bar');
+  const [option2, setOption2] = useState('ventasPorRegion');
   const dataList = JSON.parse(localStorage.getItem("data")) || data;
   const chartRef = useRef(null);
 
   useEffect(() => {
+    var labels;
+    var data;
+    if (option2==="ventasPorRegion") {
+       labels=["Antioquia","BogotáDC","ValledelCauca","Atlántico","Santander"]
+       data=[dataList.ventasPorRegion.Antioquia,dataList.ventasPorRegion.BogotáDC,dataList.ventasPorRegion.ValledelCauca,dataList.ventasPorRegion.Atlántico,dataList.ventasPorRegion.Santander]
+    }else if (option2==="usuariosRegistradosPorMes") {
+      labels=[
+        'enero',
+        'febrero',
+        'marzo',
+        'abril',
+        'mayo',
+        'junio',
+        'julio',
+        'agosto',
+        'septiembre',
+        'octubre',
+        'noviembre',
+        'diciembre',
+      ]
+      data=[
+        dataList.usuariosRegistradosPorMes.enero,
+        dataList.usuariosRegistradosPorMes.febrero,
+        dataList.usuariosRegistradosPorMes.marzo,
+        dataList.usuariosRegistradosPorMes.abril,
+        dataList.usuariosRegistradosPorMes.mayo,
+        dataList.usuariosRegistradosPorMes.junio,
+        dataList.usuariosRegistradosPorMes.julio,
+        dataList.usuariosRegistradosPorMes.agosto,
+        dataList.usuariosRegistradosPorMes.septiembre,
+        dataList.usuariosRegistradosPorMes.octubre,
+        dataList.usuariosRegistradosPorMes.noviembre,
+        dataList.usuariosRegistradosPorMes.diciembre,
+      ];
+    }else if (option2==="ventasPorMes") {
+      labels=[
+        'enero',
+        'febrero',
+        'marzo',
+        'abril',
+        'mayo',
+        'junio',
+        'julio',
+        'agosto',
+        'septiembre',
+        'octubre',
+        'noviembre',
+        'diciembre',
+      ]
+      data=[
+        dataList.ventasPorMes.enero,
+        dataList.ventasPorMes.febrero,
+        dataList.ventasPorMes.marzo,
+        dataList.ventasPorMes.abril,
+        dataList.ventasPorMes.mayo,
+        dataList.ventasPorMes.junio,
+        dataList.ventasPorMes.julio,
+        dataList.ventasPorMes.agosto,
+        dataList.ventasPorMes.septiembre,
+        dataList.ventasPorMes.octubre,
+        dataList.ventasPorMes.noviembre,
+        dataList.ventasPorMes.diciembre,
+      ];
+    }
     let chartInstance = null;
     const ctx = chartRef.current.getContext('2d');
 
-    if (chartInstance) {
-      chartInstance.destroy();
-    }
-
-    const filteredData = filterData(dataList, option1, option2);
-
     chartInstance = new Chart(ctx, {
-      type: 'bar',
+      type: option1,
       data: {
-        labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo'],
+        labels: labels,
         datasets: [
           {
             label: 'Ventas',
-            data: [12, 19, 3, 5, 2],
+            data: data,
             backgroundColor: 'rgba(75, 192, 192, 0.6)',
           },
         ],
@@ -44,7 +102,7 @@ function Grafico() {
     return () => {
       chartInstance.destroy();
     };
-  }, [option1, option2]);
+  }, [option1, option2, dataList]);
 
   const handleOption1Change = (event) => {
     setOption1(event.target.value);
@@ -54,53 +112,37 @@ function Grafico() {
     setOption2(event.target.value);
   };
 
-  const filterData = (data, option1, option2) => {
-    // Aplica la lógica de filtrado en base a las opciones seleccionadas
-    let filteredData = [0, 0, 0, 0, 0];
-
-    // Filtra los datos según las opciones seleccionadas
-    // Aquí debes implementar tu lógica de filtrado en base a tus datos reales
-    // Por ejemplo:
-    if (option1 === 'opcion1') {
-      filteredData = [1, 2, 3, 4, 5];
-    } else if (option1 === 'opcion2') {
-      filteredData = [5, 4, 3, 2, 1];
-    }
-
-    // Aplica más lógica de filtrado si es necesario
-    // Por ejemplo:
-    if (option2 === 'opcion3') {
-      filteredData = filteredData.map((value) => value * 2);
-    }
-
-    return filteredData;
-  };
+  
 
   return (
     <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
-      <FormControl sx={{ minWidth: 200, marginRight: '16px' }}>
-        <InputLabel id="option1-label">Opción 1</InputLabel>
+      <FormControl sx={{ maxWidth:200,minWidth: 100, marginRight: '16px' }}>
+      <InputLabel id="option1-label">Tipo Grafico</InputLabel>
         <Select
           labelId="option1-label"
+          label="Tipo Grafico"
           value={option1}
           onChange={handleOption1Change}
         >
-          <MenuItem value="">Seleccione una opción</MenuItem>
-          <MenuItem value="opcion1">Opción 1</MenuItem>
-          <MenuItem value="opcion2">Opción 2</MenuItem>
+          <MenuItem value="bar">bar</MenuItem>
+          <MenuItem value="line">line</MenuItem>
+          <MenuItem value="radar">radar</MenuItem>
+          <MenuItem value="pie">pie</MenuItem>
+          <MenuItem value="doughnut">doughnut</MenuItem>
         </Select>
       </FormControl>
-      <canvas ref={chartRef} style={{ maxWidth: '500px', maxHeight: '500px' }} />
-      <FormControl sx={{ minWidth: 200, marginLeft: '16px' }}>
-        <InputLabel id="option2-label">Opción 2</InputLabel>
+      <canvas ref={chartRef} style={{ maxWidth: '500px', maxHeight: '500px', minHeight:"200px", minWidth:"200px" }} />
+      <FormControl sx={{ maxWidth:200,minWidth: 100, marginLeft: '16px' }}>
+        <InputLabel id="option2-label">Datos</InputLabel>
         <Select
           labelId="option2-label"
+          label="Datos"
           value={option2}
           onChange={handleOption2Change}
         >
-          <MenuItem value="">Seleccione una opción</MenuItem>
-          <MenuItem value="opcion3">Opción 3</MenuItem>
-          <MenuItem value="opcion4">Opción 4</MenuItem>
+          <MenuItem value="ventasPorRegion">ventas Por Region</MenuItem>
+          <MenuItem value="usuariosRegistradosPorMes">usuarios Registrados Por Mes</MenuItem>
+          <MenuItem value="ventasPorMes">ventas Por Mes</MenuItem>
         </Select>
       </FormControl>
     </div>

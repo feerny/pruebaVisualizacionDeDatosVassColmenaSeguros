@@ -1,8 +1,8 @@
 {
     "ventasPorRegion": {
       "Antioquia": 5000,
-      "Bogotá D.C.": 8000,
-      "Valle del Cauca": 3000,
+      "BogotáDC": 8000,
+      "ValledelCauca": 3000,
       "Atlántico": 4000,
       "Santander": 3500
     },
