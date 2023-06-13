@@ -189,6 +189,7 @@ function TaskList({tasksList, onFilterChange, filter }) {
         <List sx={{ mt: 2 }}>
           {filteredTasks.map((task, index) => (
             <ListItem
+            sx={{padding:"0px 10px 0px 10px"}}
               key={task.id}
               disablePadding
               secondaryAction={
