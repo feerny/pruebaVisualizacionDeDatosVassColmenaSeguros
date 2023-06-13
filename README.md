@@ -1,5 +1,5 @@
 # Importante
-*toda la informacion modificada ya sea de los datos a mostrar en el grafico o las tareas se guardan en localStorage
+*toda la informacion modificada ya sea de los datos a mostrar en el grafico o las tareas se guardan en localStorage, la pagina esta desplegada en vercel para su visualizacion: https://prueba-visualizacion-de-datos-vass-colmena-seguros.vercel.app/
 ## Lista de tareas
 *El componente de lista tareas se llama taskList y para que funcione debe recibir las props necesarias como se muestra en el ejemplo donde lo consumo en en componente home, ese componente tiene varias validaciones como la de no agregar tareas repetidas y editarlas
 ## Grafico
