@@ -1,9 +1,10 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
+import { connect } from 'react-redux';
 import Chart from 'chart.js/auto';
-import data from '../../data/datos.json';
 import { FormControl, InputLabel, MenuItem, Select, Typography } from '@mui/material';
 import { styled } from '@mui/system';
 import Slider from '@mui/material/Slider';
+import { setOption1, setOption2, setRangeValue } from '../../redux/actions';
 
 const Container = styled('div')({
   display: 'flex',
@@ -24,6 +25,7 @@ const RangeContainer = styled('div')({
   flexDirection: 'column',
   alignItems: 'center',
   marginBottom: '16px',
+  width: '80%',
 });
 
 const CustomSlider = styled(Slider)({
@@ -45,12 +47,8 @@ const monthLabels = [
   'Dic',
 ];
 
-function Grafico() {
-  const [option1, setOption1] = useState('bar');
-  const [option2, setOption2] = useState('ventasPorRegion');
-  const dataList = JSON.parse(localStorage.getItem('data')) || data;
+function Grafico({ option1, option2, dataList, rangeValue, setOption1, setOption2, setRangeValue }) {
   const chartRef = useRef(null);
-  const [rangeValue, setRangeValue] = useState([0, 11]);
 
   useEffect(() => {
     let labels;
@@ -121,12 +119,7 @@ function Grafico() {
       <SelectContainer>
         <FormControl sx={{ maxWidth: 200, minWidth: 100 }}>
           <InputLabel id="option1-label">Tipo Gráfico</InputLabel>
-          <Select
-            labelId="option1-label"
-            label="Tipo Gráfico"
-            value={option1}
-            onChange={handleOption1Change}
-          >
+          <Select labelId="option1-label" label="Tipo Gráfico" value={option1} onChange={handleOption1Change}>
             <MenuItem value="bar">Barra</MenuItem>
             <MenuItem value="line">Línea</MenuItem>
             <MenuItem value="radar">Radar</MenuItem>
@@ -136,12 +129,7 @@ function Grafico() {
         </FormControl>
         <FormControl sx={{ maxWidth: 200, minWidth: 100 }}>
           <InputLabel id="option2-label">Datos</InputLabel>
-          <Select
-            labelId="option2-label"
-            label="Datos"
-            value={option2}
-            onChange={handleOption2Change}
-          >
+          <Select labelId="option2-label" label="Datos" value={option2} onChange={handleOption2Change}>
             <MenuItem value="ventasPorRegion">Ventas por Región</MenuItem>
             <MenuItem value="usuariosRegistradosPorMes">Usuarios Registrados por Mes</MenuItem>
             <MenuItem value="ventasPorMes">Ventas por Mes</MenuItem>
@@ -149,7 +137,7 @@ function Grafico() {
         </FormControl>
       </SelectContainer>
       {option2 !== 'ventasPorRegion' && (
-        <RangeContainer sx={{width:"80%"}}>
+        <RangeContainer>
           <Typography variant="subtitle1">Rango de Meses:</Typography>
           <CustomSlider
             value={rangeValue}
@@ -170,4 +158,19 @@ function Grafico() {
   );
 }
 
-export default Grafico;
+const mapStateToProps = (state) => {
+  return {
+    option1: state.option1,
+    option2: state.option2,
+    dataList: state.dataList,
+    rangeValue: state.rangeValue,
+  };
+};
+
+const mapDispatchToProps = {
+  setOption1,
+  setOption2,
+  setRangeValue,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Grafico);

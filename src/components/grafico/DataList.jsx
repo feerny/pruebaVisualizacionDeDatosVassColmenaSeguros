@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
+import { connect } from 'react-redux';
 import { FormControl, IconButton, MenuItem, Select, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from '@mui/material';
 import { styled } from '@mui/system';
 import { Edit as EditIcon, Save as SaveIcon } from '@mui/icons-material';
-import data from '../../data/datos.json';
+import { setDataList } from '../../redux/actions';
 
 const RootContainer = styled('div')({
   margin: '16px',
@@ -13,10 +14,9 @@ const SelectContainer = styled(FormControl)({
   minWidth: 200,
 });
 
-function DataList() {
+function DataList({ dataList, setDataList }) {
   const [option, setOption] = useState('ventasPorRegion');
   const [editableData, setEditableData] = useState(null);
-  const dataList=JSON.parse(localStorage.getItem("data")) || data
 
   const handleOptionChange = (event) => {
     event.preventDefault();
@@ -43,10 +43,16 @@ function DataList() {
     const updatedValue = editableData[key];
 
     // Actualizar el valor en el objeto de datos
-    dataToShow[key] = updatedValue;
+    const updatedDataList = {
+      ...dataList,
+      [option]: {
+        ...dataList[option],
+        [key]: updatedValue,
+      },
+    };
 
-    // Guardar los datos actualizados en el almacenamiento local
-    localStorage.setItem('data', JSON.stringify(dataList));
+    // Actualizar los datos en Redux
+    setDataList(updatedDataList);
 
     // Restablecer el estado editableData a null
     setEditableData(null);
@@ -64,7 +70,7 @@ function DataList() {
 
   return (
     <RootContainer>
-        <Typography variant="h3" color="text.secondary" align="center">Data</Typography>
+      <Typography variant="h3" color="text.secondary" align="center">Data</Typography>
       <SelectContainer>
         <Select
           labelId="select-label"
@@ -122,4 +128,14 @@ function DataList() {
   );
 }
 
-export default DataList;
+const mapStateToProps = (state) => {
+  return {
+    dataList: state.dataList,
+  };
+};
+
+const mapDispatchToProps = {
+  setDataList,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(DataList);

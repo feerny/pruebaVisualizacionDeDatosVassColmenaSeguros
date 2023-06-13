@@ -2,6 +2,8 @@ import './App.css';
 import Home from './pages/home';
 import Typography from '@mui/material/Typography';
 import Link from '@mui/material/Link';
+import { Provider } from 'react-redux';
+import store from './redux/store.js';
 
 function Copyright(props) {
   return (
@@ -20,7 +22,9 @@ function Copyright(props) {
 function App() {
   return (
     <div className="App">
+      <Provider store={store}>
       <Home Copyright={Copyright}></Home>
+      </Provider>
     </div>
   );
 }
