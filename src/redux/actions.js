@@ -1,11 +1,18 @@
 // actions.js
 
 export const SET_DATA_LIST = 'SET_DATA_LIST';
+export const SET_OPTION_DATA = 'SET_OPTION_DATA';
 
 export const setDataList = (dataList) => {
   return {
     type: SET_DATA_LIST,
     payload: dataList,
+  };
+};
+export const setOptionData = (option) => {
+  return {
+    type: SET_OPTION_DATA,
+    payload: option,
   };
 };
 
