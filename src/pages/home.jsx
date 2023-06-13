@@ -1,21 +1,69 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import NavBar from '../ui/nav/NavBar';
-import Grafico from '../components/grafico/Grafico';
-import DataList from '../components/grafico/DataList';
+import React, { useState } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import NavBar from "../ui/nav/NavBar";
+import Grafico from "../components/grafico/Grafico";
+import DataList from "../components/grafico/DataList";
+import TaskList from "../components/taskList/TaskList";
 
 export default function Home(props) {
+  const [tasks, setTasks] = useState([
+    { name: "Task 1", completed: false },
+    { name: "Task 2", completed: false },
+    { name: "Task 3", completed: false },
+  ]);
+  const [filter, setFilter] = useState('all');
+
+  const handleAddTask = (taskName) => {
+    const newTask = { name: taskName, completed: false };
+    setTasks([...tasks, newTask]);
+  };
+
+  const handleTaskCompletion = (taskIndex) => {
+    const updatedTasks = [...tasks];
+    updatedTasks[taskIndex].completed = !updatedTasks[taskIndex].completed;
+    setTasks(updatedTasks);
+  };
+
+  const handleDeleteTask = (taskIndex) => {
+    const updatedTasks = tasks.filter((_, index) => index !== taskIndex);
+    setTasks(updatedTasks);
+  };
+
+  const handleEditTask = (taskIndex, newTaskName) => {
+    const updatedTasks = [...tasks];
+    updatedTasks[taskIndex].name = newTaskName;
+    setTasks(updatedTasks);
+  };
+
+  const handleFilterChange = (newFilter) => {
+    setFilter(newFilter);
+  };
+
   return (
     <div>
       <Router>
-      <NavBar />
+        <NavBar />
         <Routes>
           <Route exact path="/" element={<Grafico />} />
           <Route exact path="/data" element={<DataList />} />
+          <Route
+            exact
+            path="/tasks"
+            element={
+              <TaskList
+                tasks={tasks}
+                onAddTask={handleAddTask}
+                onTaskCompletion={handleTaskCompletion}
+                onDeleteTask={handleDeleteTask}
+                onEditTask={handleEditTask}
+                onFilterChange={handleFilterChange}
+                filter={filter}
+              />
+            }
+          />
         </Routes>
       </Router>
-      <props.Copyright></props.Copyright>
+      <props.Copyright />
     </div>
   );
 }
-

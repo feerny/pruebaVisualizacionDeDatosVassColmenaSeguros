@@ -16,6 +16,9 @@ function NavBar() {
           <Button component={Link} to="/data" color="inherit">
             Datos
           </Button>
+          <Button component={Link} to="/tasks" color="inherit">
+            Tareas
+          </Button>
         </div>
       </Toolbar>
     </AppBar>
