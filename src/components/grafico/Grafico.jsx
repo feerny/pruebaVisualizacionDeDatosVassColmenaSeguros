@@ -169,7 +169,7 @@ function Grafico({ option1, option2, dataList, rangeValue, setOption1, setOption
       )}
       <canvas
         ref={chartRef}
-        style={{ maxWidth: '500px', maxHeight: '400px', minHeight: '300px', minWidth: '200px' }}
+        style={{ maxWidth: '500px', maxHeight: '400px', minHeight: '200px', minWidth: '200px' }}
       />
     </Container>
   );
