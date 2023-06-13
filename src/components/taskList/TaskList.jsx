@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   TextField,
   Button,
@@ -12,12 +12,16 @@ import {
   FormControlLabel,
   FormGroup,
   Box,
+  Collapse,
+  Alert,
 } from "@mui/material";
 import { Delete as DeleteIcon, Edit as EditIcon } from "@mui/icons-material";
 import CancelIcon from "@mui/icons-material/Cancel";
 import SaveIcon from "@mui/icons-material/Save";
+import CloseIcon from "@mui/icons-material/Close";
 
-function TaskList({tasksList, onFilterChange, filter }) {
+function TaskList({ tasksList, onFilterChange, filter }) {
+  const [open, setOpen] = React.useState(false);
   const [tasks, setTasks] = useState(tasksList);
   const [newTask, setNewTask] = useState("");
   const [editTaskIndex, setEditTaskIndex] = useState(-1);
@@ -32,12 +36,17 @@ function TaskList({tasksList, onFilterChange, filter }) {
     return `${timestamp}-${randomSuffix}`;
   };
   const onAddTask = (taskName) => {
-    const newTask = {
-      id: generateRandomId(),
-      name: taskName,
-      completed: false,
-    };
-    setTasks([...tasks, newTask]);
+    const validationdata = tasks.some((data) => data.name === taskName);
+    if (validationdata) {
+        setOpen(true)
+    } else {
+      const newTask = {
+        id: generateRandomId(),
+        name: taskName,
+        completed: false,
+      };
+      setTasks([...tasks, newTask]);
+    }
   };
 
   const onTaskCompletion = (taskIndex) => {
@@ -76,8 +85,6 @@ function TaskList({tasksList, onFilterChange, filter }) {
     });
     setTasks(updatedTasks);
   };
-
-  //////
 
   const handleInputChange = (event) => {
     setNewTask(event.target.value);
@@ -139,6 +146,26 @@ function TaskList({tasksList, onFilterChange, filter }) {
           onChange={handleInputChange}
           fullWidth
         />
+        <Collapse in={open}>
+          <Alert
+            severity="warning"
+            action={
+              <IconButton
+                aria-label="close"
+                color="inherit"
+                size="small"
+                onClick={() => {
+                  setOpen(false);
+                }}
+              >
+                <CloseIcon fontSize="inherit" />
+              </IconButton>
+            }
+            sx={{ mb: 2 }}
+          >
+            Tarea ya agregada
+          </Alert>
+        </Collapse>
 
         <Button
           variant="contained"
@@ -189,7 +216,7 @@ function TaskList({tasksList, onFilterChange, filter }) {
         <List sx={{ mt: 2 }}>
           {filteredTasks.map((task, index) => (
             <ListItem
-            sx={{padding:"0px 10px 0px 10px"}}
+              sx={{ padding: "0px 10px 0px 10px" }}
               key={task.id}
               disablePadding
               secondaryAction={
