@@ -1,3 +1,10 @@
+# Importante
+*toda la informacion modificada ya sea de los datos a mostrar en el grafico o las tareas se guardan en localStorage
+## Lista de tareas
+*El componente de lista tareas se llama taskList y para que funcione debe recibir las props necesarias como se muestra en el ejemplo donde lo consumo en en componente home, ese componente tiene varias validaciones como la de no agregar tareas repetidas y editarlas
+## Grafico
+*El componente grafico recibe los datos del estado global de la aplicacion y esos mismos se pueden modificar en el componente dataList donde tambien se listan
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
