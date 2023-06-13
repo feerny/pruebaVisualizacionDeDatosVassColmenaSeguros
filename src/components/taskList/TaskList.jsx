@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from "react";
 import {
   TextField,
   Button,
@@ -12,24 +12,81 @@ import {
   FormControlLabel,
   FormGroup,
   Box,
-} from '@mui/material';
-import { Delete as DeleteIcon, Edit as EditIcon  } from '@mui/icons-material';
-import CancelIcon from '@mui/icons-material/Cancel';
-import SaveIcon from '@mui/icons-material/Save';
+} from "@mui/material";
+import { Delete as DeleteIcon, Edit as EditIcon } from "@mui/icons-material";
+import CancelIcon from "@mui/icons-material/Cancel";
+import SaveIcon from "@mui/icons-material/Save";
 
-function TaskList({ tasks, onAddTask, onTaskCompletion, onDeleteTask, onFilterChange, filter, onEditTask }) {
-  const [newTask, setNewTask] = useState('');
+function TaskList({tasksList, onFilterChange, filter }) {
+  const [tasks, setTasks] = useState(tasksList);
+  const [newTask, setNewTask] = useState("");
   const [editTaskIndex, setEditTaskIndex] = useState(-1);
-  const [editTaskName, setEditTaskName] = useState('');
+  const [editTaskName, setEditTaskName] = useState("");
+  useEffect(() => {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+  }, [tasks]);
+  //funcion para generar ids randoms
+  const generateRandomId = () => {
+    const timestamp = Date.now();
+    const randomSuffix = Math.random().toString(36).substring(2, 10);
+    return `${timestamp}-${randomSuffix}`;
+  };
+  const onAddTask = (taskName) => {
+    const newTask = {
+      id: generateRandomId(),
+      name: taskName,
+      completed: false,
+    };
+    setTasks([...tasks, newTask]);
+  };
+
+  const onTaskCompletion = (taskIndex) => {
+    const updatedTasks = tasks.map((data, index) => {
+      if (data.id === taskIndex) {
+        const newData = {
+          id: tasks[index].id,
+          name: tasks[index].name,
+          completed: !tasks[index].completed,
+        };
+        return newData;
+      } else {
+        return data;
+      }
+    });
+    setTasks(updatedTasks);
+  };
+
+  const onDeleteTask = (taskIndex) => {
+    const updatedTasks = tasks.filter((data) => data.id !== taskIndex);
+    setTasks(updatedTasks);
+  };
+
+  const onEditTask = (taskIndex, newTaskName) => {
+    const updatedTasks = tasks.map((data, index) => {
+      if (data.id === taskIndex) {
+        const newData = {
+          id: tasks[index].id,
+          name: newTaskName,
+          completed: tasks[index].completed,
+        };
+        return newData;
+      } else {
+        return data;
+      }
+    });
+    setTasks(updatedTasks);
+  };
+
+  //////
 
   const handleInputChange = (event) => {
     setNewTask(event.target.value);
   };
 
   const handleAddTask = () => {
-    if (newTask.trim() !== '') {
+    if (newTask.trim() !== "") {
       onAddTask(newTask);
-      setNewTask('');
+      setNewTask("");
     }
   };
 
@@ -44,19 +101,19 @@ function TaskList({ tasks, onAddTask, onTaskCompletion, onDeleteTask, onFilterCh
 
   const handleCancelEditingTask = () => {
     setEditTaskIndex(-1);
-    setEditTaskName('');
+    setEditTaskName("");
   };
 
   const handleSaveEditedTask = (taskIndex) => {
     onEditTask(taskIndex, editTaskName);
     setEditTaskIndex(-1);
-    setEditTaskName('');
+    setEditTaskName("");
   };
 
   const filteredTasks = tasks.filter((task) => {
-    if (filter === 'completed') {
+    if (filter === "completed") {
       return task.completed;
-    } else if (filter === 'incomplete') {
+    } else if (filter === "incomplete") {
       return !task.completed;
     } else {
       return true;
@@ -65,7 +122,13 @@ function TaskList({ tasks, onAddTask, onTaskCompletion, onDeleteTask, onFilterCh
 
   return (
     <Box maxWidth={400} mx="auto">
-      <Typography color="text.secondary" variant="h3" sx={{padding:"15px"}} align="center" gutterBottom>
+      <Typography
+        color="text.secondary"
+        variant="h3"
+        sx={{ padding: "15px" }}
+        align="center"
+        gutterBottom
+      >
         Listado de tareas
       </Typography>
 
@@ -82,7 +145,7 @@ function TaskList({ tasks, onAddTask, onTaskCompletion, onDeleteTask, onFilterCh
           color="primary"
           onClick={handleAddTask}
           fullWidth
-          disabled={newTask.trim() === ''}
+          disabled={newTask.trim() === ""}
           sx={{ mt: 2 }}
         >
           Agregar
@@ -92,7 +155,7 @@ function TaskList({ tasks, onAddTask, onTaskCompletion, onDeleteTask, onFilterCh
       <FormControlLabel
         control={
           <Checkbox
-            checked={filter === 'completed'}
+            checked={filter === "completed"}
             onChange={handleFilter}
             value="completed"
           />
@@ -103,7 +166,7 @@ function TaskList({ tasks, onAddTask, onTaskCompletion, onDeleteTask, onFilterCh
       <FormControlLabel
         control={
           <Checkbox
-            checked={filter === 'incomplete'}
+            checked={filter === "incomplete"}
             onChange={handleFilter}
             value="incomplete"
           />
@@ -114,7 +177,7 @@ function TaskList({ tasks, onAddTask, onTaskCompletion, onDeleteTask, onFilterCh
       <FormControlLabel
         control={
           <Checkbox
-            checked={filter === 'all'}
+            checked={filter === "all"}
             onChange={handleFilter}
             value="all"
           />
@@ -126,17 +189,17 @@ function TaskList({ tasks, onAddTask, onTaskCompletion, onDeleteTask, onFilterCh
         <List sx={{ mt: 2 }}>
           {filteredTasks.map((task, index) => (
             <ListItem
-              key={index}
+              key={task.id}
               disablePadding
               secondaryAction={
                 <ListItemSecondaryAction>
                   {editTaskIndex === index ? (
-                    <Box sx={{display:"flex"}}>
+                    <Box sx={{ display: "flex" }}>
                       <IconButton
-                      disabled={editTaskName===''?true:false}
+                        disabled={editTaskName === "" ? true : false}
                         edge="end"
                         aria-label="save"
-                        onClick={() => handleSaveEditedTask(index)}
+                        onClick={() => handleSaveEditedTask(task.id)}
                       >
                         <SaveIcon />
                       </IconButton>
@@ -149,7 +212,7 @@ function TaskList({ tasks, onAddTask, onTaskCompletion, onDeleteTask, onFilterCh
                       </IconButton>
                     </Box>
                   ) : (
-                    <Box sx={{display:"flex"}}>
+                    <Box sx={{ display: "flex" }}>
                       <IconButton
                         edge="end"
                         aria-label="edit"
@@ -160,7 +223,7 @@ function TaskList({ tasks, onAddTask, onTaskCompletion, onDeleteTask, onFilterCh
                       <IconButton
                         edge="end"
                         aria-label="delete"
-                        onClick={() => onDeleteTask(index)}
+                        onClick={() => onDeleteTask(task.id)}
                       >
                         <DeleteIcon />
                       </IconButton>
@@ -173,7 +236,7 @@ function TaskList({ tasks, onAddTask, onTaskCompletion, onDeleteTask, onFilterCh
                 control={
                   <Checkbox
                     checked={task.completed}
-                    onChange={() => onTaskCompletion(index)}
+                    onChange={() => onTaskCompletion(task.id)}
                   />
                 }
                 label={
@@ -186,9 +249,7 @@ function TaskList({ tasks, onAddTask, onTaskCompletion, onDeleteTask, onFilterCh
                     <ListItemText
                       primary={task.name}
                       sx={
-                        task.completed
-                          ? { textDecoration: 'line-through' }
-                          : {}
+                        task.completed ? { textDecoration: "line-through" } : {}
                       }
                     />
                   )

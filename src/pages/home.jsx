@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import NavBar from "../ui/nav/NavBar";
 import Grafico from "../components/grafico/Grafico";
@@ -6,40 +6,9 @@ import DataList from "../components/grafico/DataList";
 import TaskList from "../components/taskList/TaskList";
 
 export default function Home(props) {
-  const [tasks, setTasks] = useState(
-    JSON.parse(localStorage.getItem("tasks")) || [
-      { name: "Tarea 1", completed: false },
-      { name: "Tarea 2", completed: false },
-      { name: "Tarea 3", completed: false },
-    ]
-  );
-  const [filter, setFilter] = useState('all');
+  const [filter, setFilter] = useState("all");
 
-  useEffect(() => {
-    localStorage.setItem("tasks", JSON.stringify(tasks));
-  }, [tasks]);
 
-  const handleAddTask = (taskName) => {
-    const newTask = { name: taskName, completed: false };
-    setTasks([...tasks, newTask]);
-  };
-
-  const handleTaskCompletion = (taskIndex) => {
-    const updatedTasks = [...tasks];
-    updatedTasks[taskIndex].completed = !updatedTasks[taskIndex].completed;
-    setTasks(updatedTasks);
-  };
-
-  const handleDeleteTask = (taskIndex) => {
-    const updatedTasks = tasks.filter((_, index) => index !== taskIndex);
-    setTasks(updatedTasks);
-  };
-
-  const handleEditTask = (taskIndex, newTaskName) => {
-    const updatedTasks = [...tasks];
-    updatedTasks[taskIndex].name = newTaskName;
-    setTasks(updatedTasks);
-  };
 
   const handleFilterChange = (newFilter) => {
     setFilter(newFilter);
@@ -57,13 +26,13 @@ export default function Home(props) {
             path="/tasks"
             element={
               <TaskList
-                tasks={tasks}
-                onAddTask={handleAddTask}
-                onTaskCompletion={handleTaskCompletion}
-                onDeleteTask={handleDeleteTask}
-                onEditTask={handleEditTask}
                 onFilterChange={handleFilterChange}
                 filter={filter}
+                tasksList={JSON.parse(localStorage.getItem("tasks")) || [
+                  { id: 1, name: "Tarea 1", completed: false },
+                  { id: 2, name: "Tarea 2", completed: false },
+                  { id: 3, name: "Tarea 3", completed: false },
+                ]}
               />
             }
           />
