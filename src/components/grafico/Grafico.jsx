@@ -127,7 +127,8 @@ function Grafico({ option1, option2, dataList, rangeValue, setOption1, setOption
     setRangeValue([0, 11]);
   };
 
-  const handleRangeChange = (newValue) => {
+  //el newValue es lo mismo que event.target.value
+  const handleRangeChange = (event,newValue) => {
     setRangeValue(newValue);
   };
 
