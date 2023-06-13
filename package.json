@@ -1,5 +1,8 @@
 {
   "name": "prueba-vass",
+  "jest": {
+    "testEnvironment": "jsdom"
+  },
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -44,5 +47,11 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@babel/preset-react": "^7.22.5",
+    "jest": "^27.5.1",
+    "jsdom": "^22.1.0",
+    "redux-mock-store": "^1.5.4"
   }
 }

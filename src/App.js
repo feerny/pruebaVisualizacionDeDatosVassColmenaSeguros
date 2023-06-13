@@ -4,8 +4,13 @@ import Typography from '@mui/material/Typography';
 import Link from '@mui/material/Link';
 import { Provider } from 'react-redux';
 import store from './redux/store.js';
+import { useEffect } from 'react';
 
 function Copyright(props) {
+  useEffect(() => {
+    localStorage.clear()
+  }, [ ])
+  
   return (
     <Typography sx={{padding:"10px"}} variant="body2" color="text.secondary" align="center" {...props}>
       {'Copyright © '}
