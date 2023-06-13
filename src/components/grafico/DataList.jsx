@@ -14,7 +14,7 @@ const SelectContainer = styled(FormControl)({
 });
 
 function DataList() {
-  const [option, setOption] = useState('ventasPorMes');
+  const [option, setOption] = useState('ventasPorRegion');
   const [editableData, setEditableData] = useState(null);
   const dataList=JSON.parse(localStorage.getItem("data")) || data
 

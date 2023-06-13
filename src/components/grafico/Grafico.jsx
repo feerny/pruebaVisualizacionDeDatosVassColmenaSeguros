@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Chart from 'chart.js/auto';
 import data from '../../data/datos.json';
-import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
+import { FormControl, InputLabel, MenuItem, Select, Typography } from '@mui/material';
 import { styled } from '@mui/system';
+import Slider from '@mui/material/Slider';
 
 const Container = styled('div')({
   display: 'flex',
@@ -18,15 +19,43 @@ const SelectContainer = styled('div')({
   gap: '16px',
 });
 
+const RangeContainer = styled('div')({
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  marginBottom: '16px',
+});
+
+const CustomSlider = styled(Slider)({
+  width: '100%',
+});
+
+const monthLabels = [
+  'Ene',
+  'Feb',
+  'Mar',
+  'Abr',
+  'May',
+  'Jun',
+  'Jul',
+  'Ago',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dic',
+];
+
 function Grafico() {
   const [option1, setOption1] = useState('bar');
   const [option2, setOption2] = useState('ventasPorRegion');
   const dataList = JSON.parse(localStorage.getItem('data')) || data;
   const chartRef = useRef(null);
+  const [rangeValue, setRangeValue] = useState([0, 11]);
 
   useEffect(() => {
-    var labels;
-    var data;
+    let labels;
+    let data;
+
     if (option2 === 'ventasPorRegion') {
       labels = ['Antioquia', 'BogotáDC', 'ValledelCauca', 'Atlántico', 'Santander'];
       data = [
@@ -37,64 +66,13 @@ function Grafico() {
         dataList.ventasPorRegion.Santander,
       ];
     } else if (option2 === 'usuariosRegistradosPorMes') {
-      labels = [
-        'enero',
-        'febrero',
-        'marzo',
-        'abril',
-        'mayo',
-        'junio',
-        'julio',
-        'agosto',
-        'septiembre',
-        'octubre',
-        'noviembre',
-        'diciembre',
-      ];
-      data = [
-        dataList.usuariosRegistradosPorMes.enero,
-        dataList.usuariosRegistradosPorMes.febrero,
-        dataList.usuariosRegistradosPorMes.marzo,
-        dataList.usuariosRegistradosPorMes.abril,
-        dataList.usuariosRegistradosPorMes.mayo,
-        dataList.usuariosRegistradosPorMes.junio,
-        dataList.usuariosRegistradosPorMes.julio,
-        dataList.usuariosRegistradosPorMes.agosto,
-        dataList.usuariosRegistradosPorMes.septiembre,
-        dataList.usuariosRegistradosPorMes.octubre,
-        dataList.usuariosRegistradosPorMes.noviembre,
-        dataList.usuariosRegistradosPorMes.diciembre,
-      ];
+      labels = monthLabels.slice(rangeValue[0], rangeValue[1] + 1);
+      data = Object.values(dataList.usuariosRegistradosPorMes).slice(rangeValue[0], rangeValue[1] + 1);
     } else if (option2 === 'ventasPorMes') {
-      labels = [
-        'enero',
-        'febrero',
-        'marzo',
-        'abril',
-        'mayo',
-        'junio',
-        'julio',
-        'agosto',
-        'septiembre',
-        'octubre',
-        'noviembre',
-        'diciembre',
-      ];
-      data = [
-        dataList.ventasPorMes.enero,
-        dataList.ventasPorMes.febrero,
-        dataList.ventasPorMes.marzo,
-        dataList.ventasPorMes.abril,
-        dataList.ventasPorMes.mayo,
-        dataList.ventasPorMes.junio,
-        dataList.ventasPorMes.julio,
-        dataList.ventasPorMes.agosto,
-        dataList.ventasPorMes.septiembre,
-        dataList.ventasPorMes.octubre,
-        dataList.ventasPorMes.noviembre,
-        dataList.ventasPorMes.diciembre,
-      ];
+      labels = monthLabels.slice(rangeValue[0], rangeValue[1] + 1);
+      data = Object.values(dataList.ventasPorMes).slice(rangeValue[0], rangeValue[1] + 1);
     }
+
     let chartInstance = null;
     const ctx = chartRef.current.getContext('2d');
 
@@ -123,7 +101,7 @@ function Grafico() {
     return () => {
       chartInstance.destroy();
     };
-  }, [option1, option2, dataList]);
+  }, [option1, option2, dataList, rangeValue]);
 
   const handleOption1Change = (event) => {
     setOption1(event.target.value);
@@ -131,24 +109,29 @@ function Grafico() {
 
   const handleOption2Change = (event) => {
     setOption2(event.target.value);
+    setRangeValue([0, 11]);
+  };
+
+  const handleRangeChange = (event, newValue) => {
+    setRangeValue(newValue);
   };
 
   return (
     <Container>
       <SelectContainer>
         <FormControl sx={{ maxWidth: 200, minWidth: 100 }}>
-          <InputLabel id="option1-label">Tipo Grafico</InputLabel>
+          <InputLabel id="option1-label">Tipo Gráfico</InputLabel>
           <Select
             labelId="option1-label"
-            label="Tipo Grafico"
+            label="Tipo Gráfico"
             value={option1}
             onChange={handleOption1Change}
           >
-            <MenuItem value="bar">bar</MenuItem>
-            <MenuItem value="line">line</MenuItem>
-            <MenuItem value="radar">radar</MenuItem>
-            <MenuItem value="pie">pie</MenuItem>
-            <MenuItem value="doughnut">doughnut</MenuItem>
+            <MenuItem value="bar">Barra</MenuItem>
+            <MenuItem value="line">Línea</MenuItem>
+            <MenuItem value="radar">Radar</MenuItem>
+            <MenuItem value="pie">Pastel</MenuItem>
+            <MenuItem value="doughnut">Donut</MenuItem>
           </Select>
         </FormControl>
         <FormControl sx={{ maxWidth: 200, minWidth: 100 }}>
@@ -159,13 +142,30 @@ function Grafico() {
             value={option2}
             onChange={handleOption2Change}
           >
-            <MenuItem value="ventasPorRegion">ventas Por Region</MenuItem>
-            <MenuItem value="usuariosRegistradosPorMes">usuarios Registrados Por Mes</MenuItem>
-            <MenuItem value="ventasPorMes">ventas Por Mes</MenuItem>
+            <MenuItem value="ventasPorRegion">Ventas por Región</MenuItem>
+            <MenuItem value="usuariosRegistradosPorMes">Usuarios Registrados por Mes</MenuItem>
+            <MenuItem value="ventasPorMes">Ventas por Mes</MenuItem>
           </Select>
         </FormControl>
       </SelectContainer>
-      <canvas ref={chartRef} style={{ maxWidth: '500px', maxHeight: '400px', minHeight: '200px', minWidth: '200px' }} />
+      {option2 !== 'ventasPorRegion' && (
+        <RangeContainer sx={{width:"80%"}}>
+          <Typography variant="subtitle1">Rango de Meses:</Typography>
+          <CustomSlider
+            value={rangeValue}
+            onChange={handleRangeChange}
+            min={0}
+            max={11}
+            marks={monthLabels.map((month, index) => ({ value: index, label: month }))}
+            track={false}
+            getAriaLabel={(index) => (index === 0 ? 'Min' : 'Max')}
+          />
+        </RangeContainer>
+      )}
+      <canvas
+        ref={chartRef}
+        style={{ maxWidth: '500px', maxHeight: '400px', minHeight: '200px', minWidth: '200px' }}
+      />
     </Container>
   );
 }
