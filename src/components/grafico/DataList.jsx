@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { FormControl, IconButton, MenuItem, Select, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from '@mui/material';
 import { styled } from '@mui/system';
 import { Edit as EditIcon, Save as SaveIcon } from '@mui/icons-material';
-import { setDataList,setOptionData } from '../../redux/actions';
+import { setDataList } from '../../redux/actions';
 
 const RootContainer = styled('div')({
   margin: '16px',
@@ -14,12 +14,22 @@ const SelectContainer = styled(FormControl)({
   minWidth: 200,
 });
 
-function DataList({ dataList, setDataList, setOptionData, optionData }) {
-  const [editableData, setEditableData] = useState(null);
+function DataList({ dataList, setDataList }) {
+  const [option, setOption] = useState('ventasPorRegion');
+  const [editableData, setEditableData] = useState({});
+  let dataToShow = null;
+
+  if (option === 'ventasPorMes') {
+    dataToShow = dataList.ventasPorMes;
+  } else if (option === 'usuariosRegistradosPorMes') {
+    dataToShow = dataList.usuariosRegistradosPorMes;
+  } else if (option === 'ventasPorRegion') {
+    dataToShow = dataList.ventasPorRegion;
+  }
 
   const handleOptionChange = (event) => {
     event.preventDefault();
-    setOptionData(event.target.value);
+    setOption(event.target.value);
   };
 
   const handleInputChange = (key, value) => {
@@ -34,7 +44,7 @@ function DataList({ dataList, setDataList, setOptionData, optionData }) {
     // Establecer el valor en el estado editableData solo cuando se hace clic en el botón de editar
     setEditableData((prevState) => ({
       ...prevState,
-      [key]: dataToShow[key],
+      [key]: dataToShow[key] || '',
     }));
   };
 
@@ -44,8 +54,8 @@ function DataList({ dataList, setDataList, setOptionData, optionData }) {
     // Actualizar el valor en el objeto de datos
     const updatedDataList = {
       ...dataList,
-      [optionData]: {
-        ...dataList[optionData],
+      [option]: {
+        ...dataList[option],
         [key]: updatedValue,
       },
     };
@@ -53,29 +63,17 @@ function DataList({ dataList, setDataList, setOptionData, optionData }) {
     // Actualizar los datos en Redux
     setDataList(updatedDataList);
 
-    // Restablecer el estado editableData a null
-    setEditableData(null);
+    // Restablecer el estado editableData a un objeto vacío
+    setEditableData({});
   };
-
-  let dataToShow = null;
-
-  if (optionData === 'ventasPorMes') {
-    dataToShow = dataList.ventasPorMes;
-  } else if (optionData === 'usuariosRegistradosPorMes') {
-    dataToShow = dataList.usuariosRegistradosPorMes;
-  } else if (optionData === 'ventasPorRegion') {
-    dataToShow = dataList.ventasPorRegion;
-  }
 
   return (
     <RootContainer>
-      <Typography variant="h3" color="text.secondary" align="center">Lista datos</Typography>
+      <Typography variant="h3" color="text.secondary" align="center">
+        Data
+      </Typography>
       <SelectContainer>
-        <Select
-          labelId="select-label"
-          value={optionData}
-          onChange={handleOptionChange}
-        >
+        <Select labelId="select-label" value={option} onChange={handleOptionChange}>
           <MenuItem value="ventasPorMes">Ventas por mes</MenuItem>
           <MenuItem value="usuariosRegistradosPorMes">Usuarios registrados por mes</MenuItem>
           <MenuItem value="ventasPorRegion">Ventas por región</MenuItem>
@@ -93,32 +91,36 @@ function DataList({ dataList, setDataList, setOptionData, optionData }) {
               </TableRow>
             </TableHead>
             <TableBody>
-              {Object.entries(dataToShow).map(([key, value]) => (
-                <TableRow key={key}>
-                  <TableCell>{key}</TableCell>
-                  <TableCell>
-                    {editableData && editableData[key] ? (
-                      <TextField
-                        value={editableData[key]}
-                        onChange={(e) => handleInputChange(key, e.target.value)}
-                      />
-                    ) : (
-                      value
-                    )}
-                  </TableCell>
-                  <TableCell>
-                    {editableData && editableData[key] ? (
-                      <IconButton onClick={() => handleSave(key)}>
-                        <SaveIcon />
-                      </IconButton>
-                    ) : (
-                      <IconButton onClick={() => handleEdit(key)}>
-                        <EditIcon />
-                      </IconButton>
-                    )}
-                  </TableCell>
-                </TableRow>
-              ))}
+              {Object.entries(dataToShow).map(([key, value]) => {
+                const isEditing = editableData.hasOwnProperty(key);
+
+                return (
+                  <TableRow key={key}>
+                    <TableCell>{key}</TableCell>
+                    <TableCell>
+                      {isEditing ? (
+                        <TextField
+                          value={editableData[key]}
+                          onChange={(e) => handleInputChange(key, e.target.value)}
+                        />
+                      ) : (
+                        value
+                      )}
+                    </TableCell>
+                    <TableCell>
+                      {isEditing ? (
+                        <IconButton onClick={() => handleSave(key)}>
+                          <SaveIcon />
+                        </IconButton>
+                      ) : (
+                        <IconButton onClick={() => handleEdit(key)}>
+                          <EditIcon />
+                        </IconButton>
+                      )}
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
             </TableBody>
           </Table>
         </TableContainer>
@@ -130,13 +132,11 @@ function DataList({ dataList, setDataList, setOptionData, optionData }) {
 const mapStateToProps = (state) => {
   return {
     dataList: state.dataList,
-    optionData:state.optionData,
   };
 };
 
 const mapDispatchToProps = {
   setDataList,
-  setOptionData
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(DataList);
