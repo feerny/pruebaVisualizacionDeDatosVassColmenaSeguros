@@ -164,7 +164,7 @@ function Grafico() {
       )}
       <canvas
         ref={chartRef}
-        style={{ maxWidth: '500px', maxHeight: '400px', minHeight: '200px', minWidth: '200px' }}
+        style={{ maxWidth: '500px', maxHeight: '400px', minHeight: '300px', minWidth: '200px' }}
       />
     </Container>
   );
