@@ -65,13 +65,13 @@ function TaskList({ tasks, onAddTask, onTaskCompletion, onDeleteTask, onFilterCh
 
   return (
     <Box maxWidth={400} mx="auto">
-      <Typography variant="h5" align="center" gutterBottom>
-        Task List
+      <Typography color="text.secondary" variant="h3" sx={{padding:"15px"}} align="center" gutterBottom>
+        Listado de tareas
       </Typography>
 
       <FormGroup>
         <TextField
-          label="New Task"
+          label="Nueva tarea"
           value={newTask}
           onChange={handleInputChange}
           fullWidth
@@ -85,7 +85,7 @@ function TaskList({ tasks, onAddTask, onTaskCompletion, onDeleteTask, onFilterCh
           disabled={newTask.trim() === ''}
           sx={{ mt: 2 }}
         >
-          Add Task
+          Agregar
         </Button>
       </FormGroup>
 
@@ -97,7 +97,7 @@ function TaskList({ tasks, onAddTask, onTaskCompletion, onDeleteTask, onFilterCh
             value="completed"
           />
         }
-        label="Completed"
+        label="Completas"
       />
 
       <FormControlLabel
@@ -108,7 +108,7 @@ function TaskList({ tasks, onAddTask, onTaskCompletion, onDeleteTask, onFilterCh
             value="incomplete"
           />
         }
-        label="Incomplete"
+        label="Incompletas"
       />
 
       <FormControlLabel
@@ -119,7 +119,7 @@ function TaskList({ tasks, onAddTask, onTaskCompletion, onDeleteTask, onFilterCh
             value="all"
           />
         }
-        label="All"
+        label="Todas"
       />
 
       {filteredTasks.length > 0 ? (
@@ -133,6 +133,7 @@ function TaskList({ tasks, onAddTask, onTaskCompletion, onDeleteTask, onFilterCh
                   {editTaskIndex === index ? (
                     <Box sx={{display:"flex"}}>
                       <IconButton
+                      disabled={editTaskName===''?true:false}
                         edge="end"
                         aria-label="save"
                         onClick={() => handleSaveEditedTask(index)}
@@ -198,7 +199,7 @@ function TaskList({ tasks, onAddTask, onTaskCompletion, onDeleteTask, onFilterCh
         </List>
       ) : (
         <Typography variant="body2" align="center" sx={{ mt: 2 }}>
-          No tasks available.
+          No hay tareas
         </Typography>
       )}
     </Box>

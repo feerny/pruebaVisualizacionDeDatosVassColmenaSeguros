@@ -70,7 +70,7 @@ function DataList({ dataList, setDataList }) {
 
   return (
     <RootContainer>
-      <Typography variant="h3" color="text.secondary" align="center">Data</Typography>
+      <Typography variant="h3" color="text.secondary" align="center">Lista datos</Typography>
       <SelectContainer>
         <Select
           labelId="select-label"

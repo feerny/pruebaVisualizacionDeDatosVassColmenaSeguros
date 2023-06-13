@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import NavBar from "../ui/nav/NavBar";
 import Grafico from "../components/grafico/Grafico";
@@ -6,12 +6,18 @@ import DataList from "../components/grafico/DataList";
 import TaskList from "../components/taskList/TaskList";
 
 export default function Home(props) {
-  const [tasks, setTasks] = useState([
-    { name: "Task 1", completed: false },
-    { name: "Task 2", completed: false },
-    { name: "Task 3", completed: false },
-  ]);
+  const [tasks, setTasks] = useState(
+    JSON.parse(localStorage.getItem("tasks")) || [
+      { name: "Tarea 1", completed: false },
+      { name: "Tarea 2", completed: false },
+      { name: "Tarea 3", completed: false },
+    ]
+  );
   const [filter, setFilter] = useState('all');
+
+  useEffect(() => {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+  }, [tasks]);
 
   const handleAddTask = (taskName) => {
     const newTask = { name: taskName, completed: false };
