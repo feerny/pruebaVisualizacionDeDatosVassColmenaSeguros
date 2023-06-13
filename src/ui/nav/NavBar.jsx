@@ -9,14 +9,14 @@ function NavBar() {
         <Typography variant="h6" sx={{ alignSelf: 'center', fontWeight: 'bold' }}>
           G-DATA
         </Typography>
-        <div>
-          <Button component={Link} to="/" color="inherit">
+        <div style={{ borderBottom: '1px solid white' }}>
+          <Button  component={Link} to="/" color="inherit">
             Grafica
           </Button>
-          <Button component={Link} to="/data" color="inherit">
+          <Button  component={Link} to="/data" color="inherit">
             Datos
           </Button>
-          <Button component={Link} to="/tasks" color="inherit">
+          <Button  component={Link} to="/tasks" color="inherit">
             Tareas
           </Button>
         </div>

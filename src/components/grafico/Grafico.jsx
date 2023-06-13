@@ -47,12 +47,22 @@ const monthLabels = [
   'Dic',
 ];
 
+function getRandomColor() {
+  const letters = '0123456789ABCDEF';
+  let color = '#';
+  for (let i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+}
+
 function Grafico({ option1, option2, dataList, rangeValue, setOption1, setOption2, setRangeValue }) {
   const chartRef = useRef(null);
 
   useEffect(() => {
     let labels;
     let data;
+    let backgroundColors;
 
     if (option2 === 'ventasPorRegion') {
       labels = ['Antioquia', 'BogotáDC', 'ValledelCauca', 'Atlántico', 'Santander'];
@@ -63,12 +73,15 @@ function Grafico({ option1, option2, dataList, rangeValue, setOption1, setOption
         dataList.ventasPorRegion.Atlántico,
         dataList.ventasPorRegion.Santander,
       ];
+      backgroundColors = labels.map(() => getRandomColor());
     } else if (option2 === 'usuariosRegistradosPorMes') {
       labels = monthLabels.slice(rangeValue[0], rangeValue[1] + 1);
       data = Object.values(dataList.usuariosRegistradosPorMes).slice(rangeValue[0], rangeValue[1] + 1);
+      backgroundColors = labels.map(() => getRandomColor());
     } else if (option2 === 'ventasPorMes') {
       labels = monthLabels.slice(rangeValue[0], rangeValue[1] + 1);
       data = Object.values(dataList.ventasPorMes).slice(rangeValue[0], rangeValue[1] + 1);
+      backgroundColors = labels.map(() => getRandomColor());
     }
 
     let chartInstance = null;
@@ -80,9 +93,9 @@ function Grafico({ option1, option2, dataList, rangeValue, setOption1, setOption
         labels: labels,
         datasets: [
           {
-            label: 'Ventas',
+            label: option1 === 'bar' || option1 === 'line' ? null : 'Ventas',
             data: data,
-            backgroundColor: 'rgba(75, 192, 192, 0.6)',
+            backgroundColor: option1 === 'radar' ? null:backgroundColors,
           },
         ],
       },
@@ -93,9 +106,13 @@ function Grafico({ option1, option2, dataList, rangeValue, setOption1, setOption
             beginAtZero: true,
           },
         },
+        plugins: {
+          legend: {
+            display: option1 !== 'bar' && option1 !== 'line',
+          },
+        },
       },
     });
-
     return () => {
       chartInstance.destroy();
     };
