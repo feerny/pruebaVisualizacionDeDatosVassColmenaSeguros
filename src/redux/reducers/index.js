@@ -3,6 +3,7 @@
 import { SET_OPTION_1, SET_OPTION_2, SET_RANGE_VALUE, SET_DATA_LIST,SET_OPTION_DATA } from '../actions';
 import data from '../../data/datos.json';
 
+//estado global
 const initialState = {
   option1: 'bar',
   option2: 'ventasPorRegion',

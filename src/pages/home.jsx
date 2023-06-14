@@ -6,10 +6,9 @@ import DataList from "../components/grafico/DataList";
 import TaskList from "../components/taskList/TaskList";
 
 export default function Home(props) {
+  //estado del filtro del componente taskList
   const [filter, setFilter] = useState("all");
-
-
-
+  //funcion para actualizar el estado del filtro
   const handleFilterChange = (newFilter) => {
     setFilter(newFilter);
   };

@@ -1,5 +1,5 @@
 // actions.js
-
+//actions para dataList
 export const SET_DATA_LIST = 'SET_DATA_LIST';
 export const SET_OPTION_DATA = 'SET_OPTION_DATA';
 
@@ -16,7 +16,7 @@ export const setOptionData = (option) => {
   };
 };
 
-// Resto de tus acciones existentes...
+// actions para grafico
 
 export const SET_OPTION_1 = 'SET_OPTION_1';
 export const SET_OPTION_2 = 'SET_OPTION_2';

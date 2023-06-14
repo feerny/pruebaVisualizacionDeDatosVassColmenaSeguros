@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { FormControl, IconButton, MenuItem, Select, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from '@mui/material';
 import { styled } from '@mui/system';
 import { Edit as EditIcon, Save as SaveIcon } from '@mui/icons-material';
-import { setDataList } from '../../redux/actions';
+import { setDataList,setOptionData } from '../../redux/actions';
 
 const RootContainer = styled('div')({
   margin: '16px',
@@ -14,22 +14,21 @@ const SelectContainer = styled(FormControl)({
   minWidth: 200,
 });
 
-function DataList({ dataList, setDataList }) {
-  const [option, setOption] = useState('ventasPorRegion');
+function DataList({ dataList, setDataList, setOptionData,optionData }) {
   const [editableData, setEditableData] = useState({});
   let dataToShow = null;
 
-  if (option === 'ventasPorMes') {
+  if (optionData === 'ventasPorMes') {
     dataToShow = dataList.ventasPorMes;
-  } else if (option === 'usuariosRegistradosPorMes') {
+  } else if (optionData === 'usuariosRegistradosPorMes') {
     dataToShow = dataList.usuariosRegistradosPorMes;
-  } else if (option === 'ventasPorRegion') {
+  } else if (optionData === 'ventasPorRegion') {
     dataToShow = dataList.ventasPorRegion;
   }
 
   const handleOptionChange = (event) => {
     event.preventDefault();
-    setOption(event.target.value);
+    setOptionData(event.target.value);
   };
 
   const handleInputChange = (key, value) => {
@@ -54,8 +53,8 @@ function DataList({ dataList, setDataList }) {
     // Actualizar el valor en el objeto de datos
     const updatedDataList = {
       ...dataList,
-      [option]: {
-        ...dataList[option],
+      [optionData]: {
+        ...dataList[optionData],
         [key]: updatedValue,
       },
     };
@@ -73,7 +72,7 @@ function DataList({ dataList, setDataList }) {
         Data
       </Typography>
       <SelectContainer>
-        <Select labelId="select-label" value={option} onChange={handleOptionChange}>
+        <Select labelId="select-label" value={optionData} onChange={handleOptionChange}>
           <MenuItem value="ventasPorMes">Ventas por mes</MenuItem>
           <MenuItem value="usuariosRegistradosPorMes">Usuarios registrados por mes</MenuItem>
           <MenuItem value="ventasPorRegion">Ventas por región</MenuItem>
@@ -109,7 +108,7 @@ function DataList({ dataList, setDataList }) {
                     </TableCell>
                     <TableCell>
                       {isEditing ? (
-                        <IconButton onClick={() => handleSave(key)}>
+                        <IconButton disabled={editableData[key]===""?true:false} onClick={() => handleSave(key)}>
                           <SaveIcon />
                         </IconButton>
                       ) : (
@@ -132,11 +131,13 @@ function DataList({ dataList, setDataList }) {
 const mapStateToProps = (state) => {
   return {
     dataList: state.dataList,
+    optionData:state.optionData
   };
 };
 
 const mapDispatchToProps = {
   setDataList,
+  setOptionData
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(DataList);

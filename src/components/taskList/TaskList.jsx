@@ -1,3 +1,4 @@
+//importaciones
 import React, { useState, useEffect } from "react";
 import {
   TextField,
@@ -21,7 +22,9 @@ import SaveIcon from "@mui/icons-material/Save";
 import CloseIcon from "@mui/icons-material/Close";
 
 function TaskList({ tasksList, onFilterChange, filter }) {
-  const [open, setOpen] = React.useState(false);
+  //estado de la alerta
+  const [open, setOpen] = useState(false);
+  //recibe una lista de tareas como estado del componente
   const [tasks, setTasks] = useState(tasksList);
   const [newTask, setNewTask] = useState("");
   const [editTaskIndex, setEditTaskIndex] = useState(-1);
@@ -31,15 +34,22 @@ function TaskList({ tasksList, onFilterChange, filter }) {
   }, [tasks]);
   //funcion para generar ids randoms
   const generateRandomId = () => {
+    //guarda un número que representa la fecha y hora actual.
     const timestamp = Date.now();
+    //genera una cadena string aleatoria
     const randomSuffix = Math.random().toString(36).substring(2, 10);
+    //oncatena
     return `${timestamp}-${randomSuffix}`;
   };
+  //funcion para agregar tarea
   const onAddTask = (taskName) => {
+    //fintra el nombre de la nueva tarea para saber si ya existe
     const validationdata = tasks.some((data) => data.name === taskName);
+    //si existe muestra alerta
     if (validationdata) {
         setOpen(true)
     } else {
+      //si no existe crea una nueva tarea y la agrega a la lista de tareas
       const newTask = {
         id: generateRandomId(),
         name: taskName,
