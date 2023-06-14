@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useMediaQuery } from "@mui/material";
 import {
   TextField,
   Button,
@@ -21,6 +22,8 @@ import SaveIcon from "@mui/icons-material/Save";
 import CloseIcon from "@mui/icons-material/Close";
 
 function TaskList({ tasksList, onFilterChange, filter }) {
+  // Utilizar un Media Query para verificar el ancho de la pantalla
+  const isMobile = useMediaQuery("(max-width: 600px)");
   // Estado de la alerta
   const [open, setOpen] = useState(false);
   // Recibe una lista de tareas como estado del componente
@@ -39,7 +42,9 @@ function TaskList({ tasksList, onFilterChange, filter }) {
   };
   // Función para agregar una tarea
   const onAddTask = (taskName) => {
-    const validationData = tasks.some((data) => data.name.toLowerCase() === taskName.toLowerCase());
+    const validationData = tasks.some(
+      (data) => data.name.toLowerCase() === taskName.toLowerCase()
+    );
     if (validationData) {
       setOpen(true);
     } else {
@@ -199,7 +204,7 @@ function TaskList({ tasksList, onFilterChange, filter }) {
       />
 
       {filteredTasks.length > 0 ? (
-        <Box sx={{ maxHeight: 240, overflowY: "scroll", mt: 2 }}>
+        <Box sx={{maxHeight: isMobile ? "43vh" : 240, overflowY: "scroll", mt: 2 }}>
           <List>
             {filteredTasks.map((task, index) => (
               <ListItem
@@ -266,7 +271,9 @@ function TaskList({ tasksList, onFilterChange, filter }) {
                       <ListItemText
                         primary={task.name}
                         sx={
-                          task.completed ? { textDecoration: "line-through" } : {}
+                          task.completed
+                            ? { textDecoration: "line-through" }
+                            : {}
                         }
                       />
                     )
