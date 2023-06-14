@@ -27,7 +27,7 @@ function TaskList({ tasksList, onFilterChange, filter }) {
   //recibe una lista de tareas como estado del componente
   const [tasks, setTasks] = useState(tasksList);
   const [newTask, setNewTask] = useState("");
-  const [editTaskIndex, setEditTaskIndex] = useState(-1);
+  const [editTaskIndex, setEditTaskIndex] = useState(null);
   const [editTaskName, setEditTaskName] = useState("");
   useEffect(() => {
     localStorage.setItem("tasks", JSON.stringify(tasks));
@@ -58,82 +58,77 @@ function TaskList({ tasksList, onFilterChange, filter }) {
       setTasks([...tasks, newTask]);
     }
   };
-
+  //funcion par marcar tarea como completa o desmarcarla
   const onTaskCompletion = (taskIndex) => {
-    const updatedTasks = tasks.map((data, index) => {
-      if (data.id === taskIndex) {
-        const newData = {
-          id: tasks[index].id,
-          name: tasks[index].name,
-          completed: !tasks[index].completed,
-        };
-        return newData;
-      } else {
-        return data;
-      }
-    });
+    //si el id pasado es igual al mapeado entra y cambia complete por el nuevo valor
+    const updatedTasks = tasks.map((data) => 
+      data.id === taskIndex ? { ...data, completed: !data.completed } : data
+    );
     setTasks(updatedTasks);
   };
-
+  //funcion para eliminar tarea
   const onDeleteTask = (taskIndex) => {
+    //filtra las tareas menos la eliminada y las manda al estado del componente
     const updatedTasks = tasks.filter((data) => data.id !== taskIndex);
     setTasks(updatedTasks);
   };
 
+  //funcion para editar tarea
   const onEditTask = (taskIndex, newTaskName) => {
-    const updatedTasks = tasks.map((data, index) => {
-      if (data.id === taskIndex) {
-        const newData = {
-          id: tasks[index].id,
-          name: newTaskName,
-          completed: tasks[index].completed,
-        };
-        return newData;
-      } else {
-        return data;
-      }
-    });
+    //si el id pasado es igual al mapeado devuelve la tarea con el nombre modificado
+    const updatedTasks = tasks.map((data,) => 
+      data.id === taskIndex ? { ...data, name: newTaskName } : data
+    );
     setTasks(updatedTasks);
   };
-
+  //funcion que controla el cambio de estado del input de agregar nueva tarea
   const handleInputChange = (event) => {
+    //actualiza el estado por el nuevo valor
     setNewTask(event.target.value);
   };
-
+  //funcion para agregar nueva tarea
   const handleAddTask = () => {
+    //si la tarea no esta en blanco envia la tarea a la funcion de agregarla a la lista y limpia el input
     if (newTask.trim() !== "") {
       onAddTask(newTask);
       setNewTask("");
     }
   };
-
+  //funcion para controlar el cambio de filtro
   const handleFilter = (event) => {
     onFilterChange(event.target.value);
   };
-
+  //funcion para edicion
   const handleStartEditingTask = (taskIndex, taskName) => {
+    //actualiza el estado del indice de la tarea que se esta editando
     setEditTaskIndex(taskIndex);
+    //actualiza el nombre de la tarea que se esta actualizando
     setEditTaskName(taskName);
   };
-
+  //funcion para cancelar la edicion
   const handleCancelEditingTask = () => {
-    setEditTaskIndex(-1);
+    //actualiza el estado del idice de edicion a null
+    setEditTaskIndex(null);
+    //actualiza el estado del nombre de la tarea a ""
     setEditTaskName("");
   };
-
+  //funcion para guardar los cambios aplicados
   const handleSaveEditedTask = (taskIndex) => {
+    //envia el id de la tarea y el nuevo nombre a la funcion de editar tarea
     onEditTask(taskIndex, editTaskName);
-    setEditTaskIndex(-1);
+    //vuelve a dejar null el indice de la tarea en edicion
+    setEditTaskIndex(null);
+    //vacia el nombre de la tarea editada
     setEditTaskName("");
   };
-
+//filtra las tareas segun el filtro seleccionado
   const filteredTasks = tasks.filter((task) => {
     if (filter === "completed") {
       return task.completed;
     } else if (filter === "incomplete") {
       return !task.completed;
     } else {
-      return true;
+      return task;
     }
   });
 
