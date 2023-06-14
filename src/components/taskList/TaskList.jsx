@@ -39,7 +39,7 @@ function TaskList({ tasksList, onFilterChange, filter }) {
   };
   // Función para agregar una tarea
   const onAddTask = (taskName) => {
-    const validationData = tasks.some((data) => data.name === taskName);
+    const validationData = tasks.some((data) => data.name.toLowerCase() === taskName.toLowerCase());
     if (validationData) {
       setOpen(true);
     } else {
